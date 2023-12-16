@@ -79,6 +79,39 @@ app.delete("/fruits/:id", (req, res) => {
   res.redirect("/fruits");
 });
 
+// edit route - render a form to edit a specific fruit
+// get to /fruits/:id/edit
+// render a form with the existing values filled in
+app.get("/fruits/:id/edit", (req, res) => {
+  // get id from params
+  const id = req.params.id;
+  // get the fruit being updated
+  const fruit = fruits[id];
+  // send the id and fruit over to the template
+  //edit.ejs => ./views/edit.ejs
+  res.render("edit.ejs", { fruit, id });
+});
+
+// Update route - receive the form data, updates the fruit
+// put to fruits/:id
+// update a specified fruit, then redirect to index
+app.put("/fruits/:id", (req, res) => {
+  // get the id
+  const id = req.params.id;
+  // get the body
+  const body = req.body;
+  // convert readyToEat to true or false
+  if (body.readyToEat === "on") {
+    body.readyToEat = true;
+  } else {
+    body.readyToEat = false;
+  }
+  // swap old version with new version
+  fruits[id] = body;
+  // redirect back to index page
+  res.redirect("/fruits");
+});
+
 // fruits show route
 // get request to /fruits/:id
 // return a single fruit
@@ -94,7 +127,7 @@ app.get("/fruits/:id", (req, res) => {
   // res.render(template, data)
   // for the template assume "/views/"
   // "show.ejs" =>  ./views/show.ejs
-  res.render("show.ejs", { fruit });
+  res.render("show.ejs", { fruit, id });
   // {fruit} is the same as {fruit:fruit}
 });
 
